@@ -1,0 +1,8 @@
+/target/
+/gen/
+*.sqlite
+*.sqlite3
+*.db
+*.log
+*.json.backup
+__pycache__/

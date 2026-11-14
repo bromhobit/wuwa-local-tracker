@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=WuWa Local Tracker
+Comment=Local Wuthering Waves convene history
+Exec=wuwa-local-tracker
+Icon=wuwa-local-tracker
+Terminal=false
+Categories=Game;Utility;

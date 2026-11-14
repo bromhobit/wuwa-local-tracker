@@ -1,0 +1,25 @@
+# Maintainer: WuWa Local Tracker
+pkgname=wuwa-local-tracker
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Local convene history tracker for Wuthering Waves'
+arch=('x86_64')
+url='https://github.com/bromhobit/wuwa-local-tracker'
+license=('custom')
+depends=('glibc' 'gcc-libs' 'gtk3' 'webkit2gtk-4.1')
+makedepends=('cargo' 'pkgconf' 'base-devel')
+source=("wuwa-local-tracker-source-${pkgver}.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+  cd "$srcdir/wuwa-local-tracker"
+  export CFLAGS='-O2 -pipe -march=x86-64 -mtune=generic'
+  export CXXFLAGS="$CFLAGS"
+  cargo build --release --locked
+}
+package() {
+  cd "$srcdir/wuwa-local-tracker"
+  install -Dm755 target/release/wuwa-local-tracker "$pkgdir/usr/bin/wuwa-local-tracker"
+  install -Dm644 packaging/wuwa-local-tracker.desktop "$pkgdir/usr/share/applications/wuwa-local-tracker.desktop"
+  install -Dm644 icons/icon.png "$pkgdir/usr/share/icons/hicolor/32x32/apps/wuwa-local-tracker.png"
+}

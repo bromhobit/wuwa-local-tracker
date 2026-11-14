@@ -16,7 +16,7 @@ The current counter is the number of recorded pulls since the latest 5★. If th
 
 ### Build
 
-Install Rust and [Tauri 2 system prerequisites](https://v2.tauri.app/start/prerequisites/), then run `cargo run --locked` or `cargo build --release --locked`. Node.js is not required. GitHub Actions builds executable artifacts for Linux x86-64, Windows x86-64 and macOS Apple Silicon. These are uninstalled executables, not signed installers; Windows requires WebView2 and Linux requires GTK 3 and WebKitGTK 4.1. macOS and Windows builds are not yet tested on real devices. The game itself may not be available natively on every platform.
+Install Rust and [Tauri 2 system prerequisites](https://v2.tauri.app/start/prerequisites/), then run `cargo run --locked` or `cargo build --release --locked`. Node.js is not required. Linux x86-64 packages are published in GitHub Releases: AppImage for many distributions and .deb for Debian/Ubuntu. AppImage requires FUSE support; the .deb installs its required system libraries. Windows support is planned separately.
 
 The database is in the operating system's app-data directory under `local.wuwa.tracker/history.sqlite3` (Linux: `~/.local/share/local.wuwa.tracker/history.sqlite3`).
 
@@ -28,4 +28,4 @@ The database is in the operating system's app-data directory under `local.wuwa.t
 
 Экспорт и импорт JSON позволяют сохранить и восстановить все аккаунты. Баннеры новичка скрыты из интерфейса и статистики, но ранее сохранённые записи остаются в резервной копии. При неполной истории счётчик может быть ниже реального; гарантия ивентового персонажа после 50/50 пока не определяется.
 
-Для сборки установите Rust и [зависимости Tauri 2](https://v2.tauri.app/start/prerequisites/), затем выполните `cargo run --locked` или `cargo build --release --locked`. Node.js не нужен. GitHub Actions создаёт исполняемые файлы для Linux x86-64, Windows x86-64 и macOS Apple Silicon. Это не подписанные установщики; сборки для Windows и macOS пока не проверены на реальных устройствах.
+Для сборки установите Rust и [зависимости Tauri 2](https://v2.tauri.app/start/prerequisites/), затем выполните `cargo run --locked` или `cargo build --release --locked`. Node.js не нужен. В GitHub Releases доступны пакеты для Linux x86-64: AppImage для разных дистрибутивов и .deb для Debian/Ubuntu. Для AppImage необходима поддержка FUSE; .deb устанавливает необходимые системные библиотеки. Поддержка Windows планируется отдельно.

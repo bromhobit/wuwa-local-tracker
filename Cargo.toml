@@ -1,6 +1,8 @@
 [package]
 name = "wuwa-local-tracker"
 version = "0.1.0"
+description = "Local Wuthering Waves convene history tracker"
+authors = ["bromhobit"]
 edition = "2021"
 
 [build-dependencies]

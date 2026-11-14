@@ -1,1 +1,31 @@
-{"$schema":"https://schema.tauri.app/config/2","productName":"WuWa Local Tracker","version":"0.1.0","identifier":"local.wuwa.tracker","build":{"frontendDist":"frontend"},"app":{"windows":[{"title":"WuWa Local Tracker","width":1100,"height":760}],"security":{"csp":"default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'"}},"bundle":{"active":false}}
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "WuWa Local Tracker",
+  "version": "0.1.0",
+  "identifier": "local.wuwa.tracker",
+  "build": {
+    "frontendDist": "frontend"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "WuWa Local Tracker",
+        "width": 1100,
+        "height": 760
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "deb",
+      "appimage"
+    ],
+    "icon": [
+      "icons/icon.png"
+    ]
+  }
+}

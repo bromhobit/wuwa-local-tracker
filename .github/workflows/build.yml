@@ -12,6 +12,7 @@ on:
       - 'frontend/**'
       - 'capabilities/**'
       - 'icons/**'
+      - 'decky-wuwa/**'
   workflow_dispatch:
 permissions:
   contents: write
@@ -46,6 +47,11 @@ jobs:
         env:
           APPIMAGE_EXTRACT_AND_RUN: '1'
         run: cargo tauri build --bundles deb,appimage
+      - name: Package Decky plugin
+        if: steps.release.outputs.exists != 'true'
+        run: |
+          mkdir -p dist
+          (cd decky-wuwa && zip -r ../dist/WuWa-Tracker-Decky-0.2.0.zip plugin.json package.json main.py dist/index.js)
       - name: Publish release
         if: steps.release.outputs.exists != 'true'
         shell: bash
@@ -63,4 +69,4 @@ jobs:
             echo "Release $tag already exists; increase the version for a new release." >&2
             exit 1
           fi
-          gh release create "$tag" "${debs[@]}" "${images[@]}" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "WuWa Local Tracker $version" --notes "Linux x86-64: AppImage for compatible distributions and DEB for Debian/Ubuntu. History is stored locally."
+          gh release create "$tag" "${debs[@]}" "${images[@]}" dist/WuWa-Tracker-Decky-*.zip --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "WuWa Local Tracker $version" --notes "Linux x86-64: AppImage for compatible distributions and DEB for Debian/Ubuntu. History is stored locally."

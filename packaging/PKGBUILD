@@ -1,6 +1,6 @@
 # Maintainer: WuWa Local Tracker
 pkgname=wuwa-local-tracker
-pkgver=0.1.0
+pkgver=0.2.0
 pkgrel=1
 pkgdesc='Local convene history tracker for Wuthering Waves'
 arch=('x86_64')

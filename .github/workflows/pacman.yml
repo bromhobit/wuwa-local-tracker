@@ -22,17 +22,17 @@ jobs:
           chown -R builder:builder "$GITHUB_WORKSPACE"
           mkdir -p /tmp/package-build/wuwa-local-tracker
           tar -cf - Cargo.toml Cargo.lock build.rs tauri.conf.json src frontend capabilities icons packaging | tar -xf - -C /tmp/package-build/wuwa-local-tracker
-          tar -czf /tmp/package-build/wuwa-local-tracker-source-0.1.0.tar.gz -C /tmp/package-build wuwa-local-tracker
+          tar -czf /tmp/package-build/wuwa-local-tracker-source-0.2.0.tar.gz -C /tmp/package-build wuwa-local-tracker
           cp packaging/PKGBUILD /tmp/package-build/PKGBUILD
           chown -R builder:builder /tmp/package-build
           cd /tmp/package-build
           runuser -u builder -- env HOME=/home/builder makepkg --noconfirm --clean
-          cp wuwa-local-tracker-0.1.0-1-x86_64.pkg.tar.zst "$GITHUB_WORKSPACE/"
+          cp wuwa-local-tracker-0.2.0-1-x86_64.pkg.tar.zst "$GITHUB_WORKSPACE/"
       - name: Verify package installation
         shell: bash
         run: |
           set -euo pipefail
-          pacman -U --noconfirm ./wuwa-local-tracker-0.1.0-1-x86_64.pkg.tar.zst
+          pacman -U --noconfirm ./wuwa-local-tracker-0.2.0-1-x86_64.pkg.tar.zst
           test -x /usr/bin/wuwa-local-tracker
           ldd /usr/bin/wuwa-local-tracker | tee /tmp/wuwa-ldd.txt
           ! grep -q 'not found' /tmp/wuwa-ldd.txt
@@ -40,4 +40,10 @@ jobs:
       - name: Upload to release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload v0.1.0 wuwa-local-tracker-0.1.0-1-x86_64.pkg.tar.zst --repo "$GITHUB_REPOSITORY"
+        shell: bash
+        run: |
+          for attempt in $(seq 1 120); do
+            if gh release view v0.2.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then break; fi
+            sleep 15
+          done
+          gh release upload v0.2.0 wuwa-local-tracker-0.2.0-1-x86_64.pkg.tar.zst --repo "$GITHUB_REPOSITORY"

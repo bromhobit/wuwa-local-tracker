@@ -20,7 +20,7 @@ fn history(app: tauri::AppHandle) -> Result<Vec<Pull>,String> {
 #[tauri::command]
 fn import_backup(app: tauri::AppHandle, data: String) -> Result<usize,String> {
     let pulls: Vec<Pull> = serde_json::from_str(&data).map_err(|e|e.to_string())?; let mut c=db(&app)?; let tx=c.transaction().map_err(|e|e.to_string())?; let mut n=0;
-    for p in pulls { if p.player.is_empty() || p.time.is_empty() || p.name.is_empty() || !(1..=8).contains(&p.pool) || p.seq < 1 || !(1..=5).contains(&p.quality) { return Err("Некорректная запись в файле".into()); } n+=tx.execute("INSERT OR IGNORE INTO pulls VALUES (?1,?2,?3,?4,?5,?6)",params![p.player,p.pool,p.time,p.seq,p.name,p.quality]).map_err(|e|e.to_string())?; }
+    for p in pulls { if p.player.is_empty() || p.time.is_empty() || p.name.is_empty() || !((1..=8).contains(&p.pool) || p.pool==12 || p.pool==13) || p.seq < 1 || !(1..=5).contains(&p.quality) { return Err("Некорректная запись в файле".into()); } n+=tx.execute("INSERT OR IGNORE INTO pulls VALUES (?1,?2,?3,?4,?5,?6)",params![p.player,p.pool,p.time,p.seq,p.name,p.quality]).map_err(|e|e.to_string())?; }
     tx.commit().map_err(|e|e.to_string())?; Ok(n)
 }
 #[tauri::command]
@@ -45,7 +45,7 @@ fn sync_inner(app: tauri::AppHandle, link:String) -> Result<usize,String> {
     let get=|k:&str|p.get(k).cloned().ok_or_else(||format!("В ссылке отсутствует {k}")); let player=get("player_id")?; let record=get("record_id")?; let server=get("svr_id")?; let resource=get("resources_id")?;
     let endpoint=if p.get("svr_area").map(String::as_str)==Some("cn") {"https://gmserver-api.aki-game2.com/gacha/record/query"} else {"https://gmserver-api.aki-game2.net/gacha/record/query"};
     let client=reqwest::blocking::Client::builder().user_agent("Mozilla/5.0").timeout(std::time::Duration::from_secs(30)).redirect(reqwest::redirect::Policy::none()).build().map_err(|e|e.to_string())?; let mut all=Vec::new();
-    for pool in 1..=8 { let body=serde_json::json!({"playerId":player,"recordId":record,"serverId":server,"cardPoolId":resource,"cardPoolType":pool,"languageCode":p.get("lang").map(String::as_str).unwrap_or("en")});
+    for pool in [1,2,3,4,5,6,7,8,12,13] { let body=serde_json::json!({"playerId":player,"recordId":record,"serverId":server,"cardPoolId":resource,"cardPoolType":pool,"languageCode":p.get("lang").map(String::as_str).unwrap_or("en")});
         let response:serde_json::Value=client.post(endpoint).json(&body).send().map_err(|_|"Ошибка соединения с игровым API")?.error_for_status().map_err(|_|"Ошибка HTTP игрового API")?.json().map_err(|_|"Не удалось прочитать ответ API")?;
         if response["code"].as_i64()!=Some(0) {return Err(format!("API отклонил запрос для баннера {pool} (код {}). {} Откройте историю круток в игре заново, дождитесь её загрузки и сразу нажмите «Найти в Steam», затем «Обновить». Если ошибка повторится, проверьте, открывается ли история внутри игры.", response["code"], response["message"].as_str().unwrap_or("Причина не указана.")));}
         let data=response["data"].as_array().cloned().unwrap_or_default(); let mut counts:HashMap<String,i64>=HashMap::new();

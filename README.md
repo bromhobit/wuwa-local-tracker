@@ -22,10 +22,10 @@ The database is in the operating system's app-data directory under `local.wuwa.t
 
 ### Arch Linux / CachyOS
 
-Download `wuwa-local-tracker-0.1.0-1-x86_64.pkg.tar.zst` from [Releases](https://github.com/bromhobit/wuwa-local-tracker/releases/tag/v0.1.0), then run:
+Download `wuwa-local-tracker-0.2.0-1-x86_64.pkg.tar.zst` from [Releases](https://github.com/bromhobit/wuwa-local-tracker/releases/tag/v0.2.0), then run:
 
 ```bash
-sudo pacman -U ./wuwa-local-tracker-0.1.0-1-x86_64.pkg.tar.zst
+sudo pacman -U ./wuwa-local-tracker-0.2.0-1-x86_64.pkg.tar.zst
 ```
 
 Stock SteamOS has a read-only system partition; AppImage is the easier option there.
@@ -42,10 +42,15 @@ Stock SteamOS has a read-only system partition; AppImage is the easier option th
 
 ### Arch Linux / CachyOS
 
-Скачайте `wuwa-local-tracker-0.1.0-1-x86_64.pkg.tar.zst` из [релиза](https://github.com/bromhobit/wuwa-local-tracker/releases/tag/v0.1.0) и установите:
+Скачайте `wuwa-local-tracker-0.2.0-1-x86_64.pkg.tar.zst` из [релиза](https://github.com/bromhobit/wuwa-local-tracker/releases/tag/v0.2.0) и установите:
 
 ```bash
-sudo pacman -U ./wuwa-local-tracker-0.1.0-1-x86_64.pkg.tar.zst
+sudo pacman -U ./wuwa-local-tracker-0.2.0-1-x86_64.pkg.tar.zst
 ```
 
 На обычной SteamOS системный раздел защищён от записи, поэтому удобнее использовать AppImage.
+
+
+### Decky Loader
+
+В релизе доступен отдельный архив `WuWa-Tracker-Decky-0.2.0.zip` с плагином. Приложение и плагин используют общую локальную историю. Показатель 0 означает отсутствие сохранённых записей и не доказывает отсутствия круток в игре.

@@ -21,39 +21,32 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - name: Check existing release
-        id: release
+      - name: Publish Decky plugin archive
+        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-        shell: bash
         run: |
+          set -euo pipefail
           version=$(python3 -c 'import json; print(json.load(open("tauri.conf.json"))["version"])')
-          if gh release view "v$version" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            if gh release view "v$version" --repo "$GITHUB_REPOSITORY" --json assets --jq ".assets[].name" | grep -Fxq SHA256SUMS; then
-              gh release delete-asset "v$version" SHA256SUMS --yes --repo "$GITHUB_REPOSITORY"
-            fi
-            echo "exists=true" >> "$GITHUB_OUTPUT"
+          tag="v$version"
+          mkdir -p dist
+          archive="dist/WuWa-Tracker-Decky-$version.zip"
+          zip -r "$archive" decky-wuwa/plugin.json decky-wuwa/package.json decky-wuwa/main.py decky-wuwa/dist/index.js
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$tag" "$archive" --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$tag" "$archive" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "WuWa Local Tracker $version" --notes "Decky Loader: архив плагина. Linux x86-64: AppImage, DEB и пакет pacman добавляются после сборки."
           fi
       - uses: dtolnay/rust-toolchain@stable
-        if: steps.release.outputs.exists != 'true'
       - name: Install dependencies
-        if: steps.release.outputs.exists != 'true'
         run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev patchelf fuse libfuse2
       - name: Install Tauri CLI
-        if: steps.release.outputs.exists != 'true'
         run: cargo install tauri-cli --version '^2' --locked
       - name: Build Linux packages
-        if: steps.release.outputs.exists != 'true'
         env:
           APPIMAGE_EXTRACT_AND_RUN: '1'
         run: cargo tauri build --bundles deb,appimage
-      - name: Package Decky plugin
-        if: steps.release.outputs.exists != 'true'
-        run: |
-          mkdir -p dist
-          (cd decky-wuwa && zip -r ../dist/WuWa-Tracker-Decky-0.2.0.zip plugin.json package.json main.py dist/index.js)
-      - name: Publish release
-        if: steps.release.outputs.exists != 'true'
+      - name: Publish Linux packages
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -64,9 +57,4 @@ jobs:
           images=(target/release/bundle/appimage/*.AppImage)
           test "${#debs[@]}" -gt 0 && test "${#images[@]}" -gt 0
           version=$(python3 -c 'import json; print(json.load(open("tauri.conf.json"))["version"])')
-          tag="v$version"
-          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            echo "Release $tag already exists; increase the version for a new release." >&2
-            exit 1
-          fi
-          gh release create "$tag" "${debs[@]}" "${images[@]}" dist/WuWa-Tracker-Decky-*.zip --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "WuWa Local Tracker $version" --notes "Linux x86-64: AppImage for compatible distributions and DEB for Debian/Ubuntu. History is stored locally."
+          gh release upload "v$version" "${debs[@]}" "${images[@]}" --clobber --repo "$GITHUB_REPOSITORY"

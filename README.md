@@ -20,6 +20,16 @@ Install Rust and [Tauri 2 system prerequisites](https://v2.tauri.app/start/prere
 
 The database is in the operating system's app-data directory under `local.wuwa.tracker/history.sqlite3` (Linux: `~/.local/share/local.wuwa.tracker/history.sqlite3`).
 
+### Arch Linux / CachyOS
+
+Download `wuwa-local-tracker-0.1.0-1-x86_64.pkg.tar.zst` from [Releases](https://github.com/bromhobit/wuwa-local-tracker/releases/tag/v0.1.0), then run:
+
+```bash
+sudo pacman -U ./wuwa-local-tracker-0.1.0-1-x86_64.pkg.tar.zst
+```
+
+Stock SteamOS has a read-only system partition; AppImage is the easier option there.
+
 ## Русский
 
 Локальный трекер истории круток Wuthering Waves на Rust, Tauri 2 и SQLite. Архив хранится на компьютере; новые записи загружаются напрямую из игрового API Kuro. Сохранённая история доступна без интернета. Это независимый фанатский проект, не связанный с Kuro Games.
@@ -29,3 +39,13 @@ The database is in the operating system's app-data directory under `local.wuwa.t
 Экспорт и импорт JSON позволяют сохранить и восстановить все аккаунты. Баннеры новичка скрыты из интерфейса и статистики, но ранее сохранённые записи остаются в резервной копии. При неполной истории счётчик может быть ниже реального; гарантия ивентового персонажа после 50/50 пока не определяется.
 
 Для сборки установите Rust и [зависимости Tauri 2](https://v2.tauri.app/start/prerequisites/), затем выполните `cargo run --locked` или `cargo build --release --locked`. Node.js не нужен. В GitHub Releases доступны пакеты для Linux x86-64: AppImage для разных дистрибутивов и .deb для Debian/Ubuntu. Для AppImage необходима поддержка FUSE; .deb устанавливает необходимые системные библиотеки. Поддержка Windows планируется отдельно.
+
+### Arch Linux / CachyOS
+
+Скачайте `wuwa-local-tracker-0.1.0-1-x86_64.pkg.tar.zst` из [релиза](https://github.com/bromhobit/wuwa-local-tracker/releases/tag/v0.1.0) и установите:
+
+```bash
+sudo pacman -U ./wuwa-local-tracker-0.1.0-1-x86_64.pkg.tar.zst
+```
+
+На обычной SteamOS системный раздел защищён от записи, поэтому удобнее использовать AppImage.

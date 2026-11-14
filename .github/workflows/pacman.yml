@@ -2,7 +2,7 @@ name: Pacman package
 on:
   push:
     branches: [main]
-    paths: ['.github/workflows/pacman.yml', 'packaging/**']
+    paths: ['.github/workflows/pacman.yml', 'packaging/**', 'Cargo.toml', 'Cargo.lock', 'src/**', 'frontend/**']
   workflow_dispatch:
 permissions:
   contents: write

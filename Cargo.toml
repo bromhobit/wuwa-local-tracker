@@ -1,18 +1,19 @@
 [package]
 name = "wuwa-local-tracker"
-version = "0.2.0"
+version = "0.2.1"
 description = "Local Wuthering Waves convene history tracker"
 authors = ["bromhobit"]
 edition = "2021"
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
+
 [dependencies]
-tauri = { version = "2", features = [] }
+regex = "1"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+rusqlite = { version = "0.32", features = ["bundled"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-rusqlite = { version = "0.32", features = ["bundled"] }
-reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls"] }
+tauri = { version = "2", features = [] }
 url = "2"
-regex = "1"
 walkdir = "2"

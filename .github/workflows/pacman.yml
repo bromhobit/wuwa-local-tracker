@@ -2,7 +2,7 @@ name: Pacman package
 on:
   push:
     branches: [main]
-    paths: ['.github/workflows/pacman.yml', 'packaging/**', 'Cargo.toml', 'Cargo.lock', 'src/**', 'frontend/**']
+    paths: ['.github/workflows/pacman.yml', 'packaging/**', 'Cargo.toml', 'Cargo.lock', 'tauri.conf.json', 'src/**', 'frontend/**']
   workflow_dispatch:
 permissions:
   contents: write
@@ -12,27 +12,29 @@ jobs:
     container: archlinux:base-devel
     steps:
       - name: Install dependencies
-        run: pacman -Syu --noconfirm --needed git rust cargo gtk3 webkit2gtk-4.1 pkgconf github-cli ca-certificates
+        run: pacman -Syu --noconfirm --needed git rust cargo gtk3 webkit2gtk-4.1 pkgconf github-cli ca-certificates python
       - uses: actions/checkout@v4
       - name: Build package as non-root
         shell: bash
         run: |
           set -euo pipefail
+          version=$(python3 -c 'import json; print(json.load(open("tauri.conf.json"))["version"])')
           useradd -m builder
           chown -R builder:builder "$GITHUB_WORKSPACE"
           mkdir -p /tmp/package-build/wuwa-local-tracker
           tar -cf - Cargo.toml Cargo.lock build.rs tauri.conf.json src frontend capabilities icons packaging | tar -xf - -C /tmp/package-build/wuwa-local-tracker
-          tar -czf /tmp/package-build/wuwa-local-tracker-source-0.2.0.tar.gz -C /tmp/package-build wuwa-local-tracker
+          tar -czf "/tmp/package-build/wuwa-local-tracker-source-${version}.tar.gz" -C /tmp/package-build wuwa-local-tracker
           cp packaging/PKGBUILD /tmp/package-build/PKGBUILD
           chown -R builder:builder /tmp/package-build
           cd /tmp/package-build
           runuser -u builder -- env HOME=/home/builder makepkg --noconfirm --clean
-          cp wuwa-local-tracker-0.2.0-1-x86_64.pkg.tar.zst "$GITHUB_WORKSPACE/"
+          cp "wuwa-local-tracker-${version}-1-x86_64.pkg.tar.zst" "$GITHUB_WORKSPACE/"
       - name: Verify package installation
         shell: bash
         run: |
           set -euo pipefail
-          pacman -U --noconfirm ./wuwa-local-tracker-0.2.0-1-x86_64.pkg.tar.zst
+          version=$(python3 -c 'import json; print(json.load(open("tauri.conf.json"))["version"])')
+          pacman -U --noconfirm "./wuwa-local-tracker-${version}-1-x86_64.pkg.tar.zst"
           test -x /usr/bin/wuwa-local-tracker
           ldd /usr/bin/wuwa-local-tracker | tee /tmp/wuwa-ldd.txt
           ! grep -q 'not found' /tmp/wuwa-ldd.txt
@@ -42,8 +44,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
+          set -euo pipefail
+          version=$(python3 -c 'import json; print(json.load(open("tauri.conf.json"))["version"])')
+          tag="v$version"
+          pkg="wuwa-local-tracker-${version}-1-x86_64.pkg.tar.zst"
           for attempt in $(seq 1 120); do
-            if gh release view v0.2.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then break; fi
+            if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+              gh release upload "$tag" "$pkg" --clobber --repo "$GITHUB_REPOSITORY"
+              exit 0
+            fi
             sleep 15
           done
-          gh release upload v0.2.0 wuwa-local-tracker-0.2.0-1-x86_64.pkg.tar.zst --repo "$GITHUB_REPOSITORY"
+          gh release create "$tag" "$pkg" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "WuWa Local Tracker $version" --notes "Arch Linux / CachyOS package."

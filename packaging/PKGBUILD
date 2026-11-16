@@ -1,6 +1,6 @@
 # Maintainer: WuWa Local Tracker
 pkgname=wuwa-local-tracker
-pkgver=0.2.0
+pkgver=0.2.1
 pkgrel=1
 pkgdesc='Local convene history tracker for Wuthering Waves'
 arch=('x86_64')
@@ -8,6 +8,7 @@ url='https://github.com/bromhobit/wuwa-local-tracker'
 license=('custom')
 depends=('glibc' 'gcc-libs' 'gtk3' 'webkit2gtk-4.1')
 makedepends=('cargo' 'pkgconf' 'base-devel')
+options=('!lto' '!debug')
 source=("wuwa-local-tracker-source-${pkgver}.tar.gz")
 sha256sums=('SKIP')
 

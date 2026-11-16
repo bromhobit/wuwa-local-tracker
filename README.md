@@ -8,7 +8,7 @@ A local-first Wuthering Waves convene history tracker built with Rust, Tauri 2 a
 
 ### Getting started
 
-Open Convene History in the game and let it load. In the tracker, select **Find in Steam**, then **Update**, or paste a history URL manually. The URL contains a temporary access credential: never share it. Linux/Steam Deck supports automatic discovery in default Steam locations; Windows and macOS discovery checks common locations. For custom installations, use the manual URL field. Fetching new records requires internet; the game may only provide a limited window of history.
+Open Convene History in the game and let it load. In the tracker, select **Find in Steam**, then **Update**, or paste a history URL manually. The URL contains a temporary access credential: never share it. Automatic discovery scans all Steam libraries (`libraryfolders.vdf`, Flatpak/Snap, external/SD mounts, Proton `compatdata`), as well as Heroic, Lutris, Bottles, and Epic/Windows installations. For custom installations, use the manual URL field. Fetching new records requires internet; the game may only provide a limited window of history.
 
 Back up or restore all accounts with JSON export/import. History and backups are stored locally. Beginner banners are hidden from the statistics and history, but existing records are preserved in backups.
 
@@ -22,10 +22,10 @@ The database is in the operating system's app-data directory under `local.wuwa.t
 
 ### Arch Linux / CachyOS
 
-Download `wuwa-local-tracker-0.2.0-1-x86_64.pkg.tar.zst` from [Releases](https://github.com/bromhobit/wuwa-local-tracker/releases/tag/v0.2.0), then run:
+Download `wuwa-local-tracker-0.2.1-1-x86_64.pkg.tar.zst` from [Releases](https://github.com/bromhobit/wuwa-local-tracker/releases/tag/v0.2.1), then run:
 
 ```bash
-sudo pacman -U ./wuwa-local-tracker-0.2.0-1-x86_64.pkg.tar.zst
+sudo pacman -U ./wuwa-local-tracker-0.2.1-1-x86_64.pkg.tar.zst
 ```
 
 Stock SteamOS has a read-only system partition; AppImage is the easier option there.
@@ -34,7 +34,7 @@ Stock SteamOS has a read-only system partition; AppImage is the easier option th
 
 Локальный трекер истории круток Wuthering Waves на Rust, Tauri 2 и SQLite. Архив хранится на компьютере; новые записи загружаются напрямую из игрового API Kuro. Сохранённая история доступна без интернета. Это независимый фанатский проект, не связанный с Kuro Games.
 
-Откройте в игре историю круток и дождитесь загрузки. В трекере нажмите «Найти в Steam» и «Обновить» либо вставьте ссылку вручную. Ссылка содержит временный ключ доступа — никому её не передавайте. Автопоиск проверяет распространённые пути Steam; для других установок используйте ручной ввод. Для новых записей нужен интернет; игра может возвращать историю только за ограниченный период.
+Откройте в игре историю круток и дождитесь загрузки. В трекере нажмите «Найти в Steam» и «Обновить» либо вставьте ссылку вручную. Ссылка содержит временный ключ доступа — никому её не передавайте. Автопоиск проверяет все библиотеки Steam (`libraryfolders.vdf`, Flatpak/Snap, внешние диски/SD-карты, Proton `compatdata`), а также Heroic, Lutris, Bottles и установки Epic/Windows; для нестандартных установок используйте ручной ввод. Для новых записей нужен интернет; игра может возвращать историю только за ограниченный период.
 
 Экспорт и импорт JSON позволяют сохранить и восстановить все аккаунты. Баннеры новичка скрыты из интерфейса и статистики, но ранее сохранённые записи остаются в резервной копии. При неполной истории счётчик может быть ниже реального; гарантия ивентового персонажа после 50/50 пока не определяется.
 
@@ -42,10 +42,10 @@ Stock SteamOS has a read-only system partition; AppImage is the easier option th
 
 ### Arch Linux / CachyOS
 
-Скачайте `wuwa-local-tracker-0.2.0-1-x86_64.pkg.tar.zst` из [релиза](https://github.com/bromhobit/wuwa-local-tracker/releases/tag/v0.2.0) и установите:
+Скачайте `wuwa-local-tracker-0.2.1-1-x86_64.pkg.tar.zst` из [релиза](https://github.com/bromhobit/wuwa-local-tracker/releases/tag/v0.2.1) и установите:
 
 ```bash
-sudo pacman -U ./wuwa-local-tracker-0.2.0-1-x86_64.pkg.tar.zst
+sudo pacman -U ./wuwa-local-tracker-0.2.1-1-x86_64.pkg.tar.zst
 ```
 
 На обычной SteamOS системный раздел защищён от записи, поэтому удобнее использовать AppImage.
@@ -53,4 +53,4 @@ sudo pacman -U ./wuwa-local-tracker-0.2.0-1-x86_64.pkg.tar.zst
 
 ### Плагин Decky Loader для Steam Deck
 
-`WuWa-Tracker-Decky-0.2.0.zip` в релизе — это плагин Decky Loader для Steam Deck. Он позволяет просматривать и обновлять историю круток Wuthering Waves в игровом режиме. Приложение и плагин используют общую локальную историю. Показатель 0 означает отсутствие сохранённых записей и не доказывает отсутствия круток в игре.
+`WuWa-Tracker-Decky-0.2.1.zip` в релизе — это плагин Decky Loader для Steam Deck. Он позволяет просматривать и обновлять историю круток Wuthering Waves в игровом режиме. Приложение и плагин используют общую локальную историю. Показатель 0 означает отсутствие сохранённых записей и не доказывает отсутствия круток в игре.
